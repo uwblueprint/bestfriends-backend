@@ -1,7 +1,7 @@
 from flask import current_app as app
 import functools
 import os
-
+from checkbrightness import check_brightness
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
@@ -33,5 +33,9 @@ def upload_file():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print(filename)
+            if (check_brightness(os.path.join(app.config['UPLOAD_FOLDER'], filename))):
+                print('{} passed brightness test'.format(filename))
+            else:
+                print('{} failed brightness test'.format(filename))
             return "Uploaded!"
     return 'Upload File'
