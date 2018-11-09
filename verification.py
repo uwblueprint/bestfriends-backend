@@ -6,6 +6,7 @@ from flask import current_app as app
 from flask import (Blueprint, request)
 from blurry_check import BlurryCheck
 from dog_detector import DogDetector
+from check_brightness import check_img_brightness
 
 bp = Blueprint('verify', __name__, url_prefix='/verify')
 
@@ -32,10 +33,12 @@ def verify_img():
 
     is_clear = blurry_checker.is_clear(decoded_img)
     dog_data = dog_detector.detect_dog_info(decoded_img)
+    is_bright = check_img_brightness(decoded_img)
 
     return json.dumps({
         "fileName": file.filename,
         "isClear": is_clear,
+        "isBright": is_bright,
         "hasDog": dog_data.has_dog,
         "breed": dog_data.breed
     })

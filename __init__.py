@@ -20,9 +20,10 @@ def create_app(test_config=None):
     
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-    # Add needed modules TODO: fix this
+    # Add needed modules TODO: fix this, shouldn't have to do this
     sys.path.append("./bestfriends-backend/test_blurriness")
     sys.path.append("./bestfriends-backend/face_detectors")
+    sys.path.append("./bestfriends-backend/check_brightness")
 
     from . import db
     db.init_app(app)
