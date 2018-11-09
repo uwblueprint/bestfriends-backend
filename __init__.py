@@ -1,4 +1,5 @@
 import os
+import sys
 from flask import Flask, request, flash, redirect, url_for
 
 def create_app(test_config=None):
@@ -19,11 +20,16 @@ def create_app(test_config=None):
     
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+    # Add needed modules TODO: fix this
+    sys.path.append("./bestfriends-backend/test_blurriness")
+    sys.path.append("./bestfriends-backend/face_detectors")
+
     from . import db
     db.init_app(app)
 
-    from . import upload
+    from . import upload, verification
     app.register_blueprint(upload.bp)
+    app.register_blueprint(verification.bp)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
