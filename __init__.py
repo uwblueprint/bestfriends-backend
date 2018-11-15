@@ -24,6 +24,7 @@ def create_app(test_config=None):
     sys.path.append("./bestfriends-backend/test_blurriness")
     sys.path.append("./bestfriends-backend/face_detectors")
     sys.path.append("./bestfriends-backend/check_brightness")
+    sys.path.append("./bestfriends-backend/check_boundingbox")
 
     from . import db
     db.init_app(app)
