@@ -7,6 +7,7 @@ sys.path.append("./bestfriends-backend/test_blurriness")
 sys.path.append("./bestfriends-backend/face_detectors")
 sys.path.append("./bestfriends-backend/check_brightness")
 sys.path.append("./bestfriends-backend/check_boundingbox")
+sys.path.append("./bestfriends-backend")
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
