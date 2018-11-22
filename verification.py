@@ -13,6 +13,10 @@ bp = Blueprint('verify', __name__, url_prefix='/verify')
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
+blurry_checker = BlurryCheck()
+dog_detector = DogDetector()
+boundingbox_checker = BoundingBoxCheck()
+
 def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -28,10 +32,6 @@ def verify_img():
         return "invalid file type"
 
     decoded_img = cv.imdecode(np.frombuffer(file.read(), np.uint8), -1)
-
-    blurry_checker = BlurryCheck()
-    dog_detector = DogDetector()
-    boundingbox_checker = BoundingBoxCheck()
 
     is_clear = blurry_checker.is_clear(decoded_img)
     dog_data = dog_detector.detect_dog_info(decoded_img)

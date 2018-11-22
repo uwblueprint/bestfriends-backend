@@ -2,6 +2,12 @@ import os
 import sys
 from flask import Flask, request, flash, redirect, url_for
 
+# Add needed modules TODO: fix this, shouldn't have to do this
+sys.path.append("./bestfriends-backend/test_blurriness")
+sys.path.append("./bestfriends-backend/face_detectors")
+sys.path.append("./bestfriends-backend/check_brightness")
+sys.path.append("./bestfriends-backend/check_boundingbox")
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
@@ -19,12 +25,6 @@ def create_app(test_config=None):
                 raise
     
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-    # Add needed modules TODO: fix this, shouldn't have to do this
-    sys.path.append("./bestfriends-backend/test_blurriness")
-    sys.path.append("./bestfriends-backend/face_detectors")
-    sys.path.append("./bestfriends-backend/check_brightness")
-    sys.path.append("./bestfriends-backend/check_boundingbox")
 
     from . import db
     db.init_app(app)
