@@ -7,6 +7,7 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+import tensorflow as tf
 
 from keras.applications.resnet50 import ResNet50, preprocess_input, decode_predictions
 from keras.preprocessing import image
@@ -14,14 +15,12 @@ from tqdm import tqdm
 from collections import namedtuple
 from breed_map import BREED_MAP
 
-
-# In[31]:
-
 DogInfo = namedtuple('DogInfo', ['has_dog', 'breed'])
 
 class DogDetector:
     def __init__(self): # define ResNet50 model
         self._ResNet50_model = ResNet50(weights='imagenet')
+        self._graph = tf.get_default_graph()
     
     def _img_to_tensor(self, img):
         # loads RGB image as PIL.Image.Image type
@@ -38,7 +37,11 @@ class DogDetector:
     def _ResNet50_predict_labels(self, img):
         # returns prediction vector for image located at img_path
         processed_img = preprocess_input(self._img_to_tensor(img))
-        return np.argmax(self._ResNet50_model.predict(processed_img))
+
+        with self._graph.as_default():
+            prediction = np.argmax(self._ResNet50_model.predict(processed_img))
+
+        return prediction
 
     def detect_dog_info(self, img):
         prediction = self._ResNet50_predict_labels(img)
