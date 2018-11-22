@@ -1,6 +1,8 @@
 import numpy as np
 import sys
 import cv2
+import os
+from flask import current_app
 
 class BoundingBoxCheck:
     def __init__(self, thresholds=(0.32, 0.68, 0.4, 0.6)):
@@ -8,7 +10,9 @@ class BoundingBoxCheck:
                         "bottle", "bus", "car", "cat", "chair", "cow", "diningtable",
                         "dog", "horse", "motorbike", "person", "pottedplant", "sheep",
                         "sofa", "train", "tvmonitor"]
-        self.net = cv2.dnn.readNetFromCaffe("MobileNetSSD_deploy.prototxt.txt", "MobileNetSSD_deploy.caffemodel")
+        self.net = cv2.dnn.readNetFromCaffe(
+            os.path.join(current_app.root_path, "check_boundingbox", "MobileNetSSD_deploy.prototxt.txt"),
+            os.path.join(current_app.root_path, "check_boundingbox", "MobileNetSSD_deploy.caffemodel"))
         self.thresholds = thresholds
 
     def getBound(self, image):
@@ -39,8 +43,8 @@ class BoundingBoxCheck:
         coords = self.getBound(image)
         middle_v = (coords[3] + coords[1]) / 2
         middle_h = (coords[2] + coords[0]) / 2
-        return self.thresholds[0] < middle_v and middle_v < self.thresholds[1] and \
-               self.thresholds[2] < middle_h and middle_h < self.thresholds[3]
+        return bool(self.thresholds[0] < middle_v and middle_v < self.thresholds[1] and \
+                    self.thresholds[2] < middle_h and middle_h < self.thresholds[3])
 
 def simple_boundingbox():
     print(sys.argv[1])
