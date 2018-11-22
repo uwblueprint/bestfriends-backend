@@ -7,6 +7,7 @@ from flask import (Blueprint, request)
 from blurry_check import BlurryCheck
 from dog_detector import DogDetector
 from check_brightness import check_img_brightness
+from boundingbox_check import BoundingBoxCheck
 
 bp = Blueprint('verify', __name__, url_prefix='/verify')
 
@@ -14,6 +15,7 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
 blurry_checker = BlurryCheck()
 dog_detector = DogDetector()
+boundingbox_checker = BoundingBoxCheck()
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -34,11 +36,13 @@ def verify_img():
     is_clear = blurry_checker.is_clear(decoded_img)
     dog_data = dog_detector.detect_dog_info(decoded_img)
     is_bright = check_img_brightness(decoded_img)
+    is_centered = boundingbox_checker.isCentered(decoded_img)
 
     return json.dumps({
         "fileName": file.filename,
         "isClear": is_clear,
         "isBright": is_bright,
         "hasDog": dog_data.has_dog,
-        "breed": dog_data.breed
+        "breed": dog_data.breed,
+        "isCentered": is_centered,
     })
