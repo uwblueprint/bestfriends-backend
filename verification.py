@@ -36,7 +36,7 @@ def verify_img():
     is_clear = blurry_checker.is_clear(decoded_img)
     dog_data = dog_detector.detect_dog_info(decoded_img)
     is_bright = check_img_brightness(decoded_img)
-    is_centered = boundingbox_checker(decoded_img)
+    is_centered = boundingbox_checker.isCentered(decoded_img)
 
     return json.dumps({
         "fileName": file.filename,
