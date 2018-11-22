@@ -23,11 +23,15 @@ def allowed_file(filename):
 def verify_img():
     # check if the post request has the file part
     if not 'file' in request.files:
-        return "missing file"
+        return json.dumps({
+            "error": "missing file"
+        })
 
     file = request.files['file']
     if not allowed_file(file.filename):
-        return "invalid file type"
+        return json.dumps({
+            "error": "invalid file type"
+        })
 
     decoded_img = cv.imdecode(np.frombuffer(file.read(), np.uint8), -1)
 
