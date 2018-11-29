@@ -1,5 +1,7 @@
 import cv2
 
+# A WIP cat detector using pre-trained Haar Cascades
+
 class CatDetector:
 	_CLASSIFIER_XML = "haarcascade_frontalcatface.xml"
 

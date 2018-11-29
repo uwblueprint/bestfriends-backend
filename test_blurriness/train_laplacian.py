@@ -10,6 +10,11 @@ BLURRY_DIR = './blurry_photos/'
 
 blurry_checker = BlurryCheck()
 
+# Script that returns the best Laplacian threshold within an
+# 80 to 200 range incrementing by 10s given directories of clear and blurry photos
+# TODO: If wanted, can schedule this to be called on some constantly
+# updating set of classified photos to make threshold more accurate
+
 def train_laplacian():
 	clear_photos = [f for f in os.listdir(CLEAR_DIR) if not f.startswith(".")]
 	blurry_photos = [f for f in os.listdir(BLURRY_DIR) if not f.startswith(".")]
