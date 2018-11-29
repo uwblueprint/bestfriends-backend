@@ -2,7 +2,8 @@ import os
 import sys
 from flask import Flask, request, flash, redirect, url_for
 
-# Add needed modules TODO: fix this, shouldn't have to do this
+# Add needed modules that will be referenced from this folder
+# TODO: fix this, shouldn't have to do this, dependency problems with Flask
 sys.path.append("./bestfriends-backend/test_blurriness")
 sys.path.append("./bestfriends-backend/face_detectors")
 sys.path.append("./bestfriends-backend/check_brightness")

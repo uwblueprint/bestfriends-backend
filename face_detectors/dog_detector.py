@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[16]:
-
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,16 +13,17 @@ from breed_map import BREED_MAP
 DogInfo = namedtuple('DogInfo', ['has_dog', 'breed'])
 
 class DogDetector:
-    def __init__(self): # define ResNet50 model
+    def __init__(self): 
+        # Define pre-trained ResNet50 model
         self._ResNet50_model = ResNet50(weights='imagenet')
+        # Set default graph so we can make repeated calls to the model
+        # across different HTTP requests
         self._graph = tf.get_default_graph()
     
     def _img_to_tensor(self, img):
-        # loads RGB image as PIL.Image.Image type
+        # Resize/manipulate image to shape that ResNet model can take
         img = cv.resize(img, (224, 224))
-        # convert PIL.Image.Image type to 3D tensor with shape (224, 224, 3)
         x = image.img_to_array(img)
-        # convert 3D tensor to 4D tensor with shape (1, 224, 224, 3) and return 4D tensor
         return np.expand_dims(x, axis=0)
 
     def _imgs_to_tensor(self, imgs):
@@ -35,16 +31,20 @@ class DogDetector:
         return np.vstack(list_of_tensors)
 
     def _ResNet50_predict_labels(self, img):
-        # returns prediction vector for image located at img_path
+        # Further preprocessing done under the hood by keras
         processed_img = preprocess_input(self._img_to_tensor(img))
 
+        # Note to reference persistent generated graph whenever actions
+        # regarding the model are taken
         with self._graph.as_default():
+            # Select most-likely prediction
             prediction = np.argmax(self._ResNet50_model.predict(processed_img))
 
         return prediction
 
     def detect_dog_info(self, img):
         prediction = self._ResNet50_predict_labels(img)
+        # Check if prediction class is in range of dog classes
         if (prediction <= 268) & (prediction >= 151):
             return DogInfo(True, BREED_MAP[prediction])
         else:

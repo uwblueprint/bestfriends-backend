@@ -1,3 +1,5 @@
+# Subset of ResNet classifiable classes that specifically pertain to dog breeds
+# used by dog_detector.py
 BREED_MAP = {
 	151: 'Chihuahua',
 	152: 'Japanese spaniel',

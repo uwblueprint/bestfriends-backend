@@ -13,6 +13,8 @@ bp = Blueprint('verify', __name__, url_prefix='/verify')
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
+# Initialize classes to do image verification
+# This allows us to avoid repeatedly setting up models
 blurry_checker = BlurryCheck()
 dog_detector = DogDetector()
 boundingbox_checker = BoundingBoxCheck()
@@ -25,6 +27,8 @@ def check_image(file):
     if not allowed_file(file.filename):
         return "invalid file type"
 
+    # Read the file from the default buffer into a CV compatible format
+    # Also converts the image to grayscale
     decoded_img = cv.imdecode(np.frombuffer(file.read(), np.uint8), -1)
 
     is_clear = blurry_checker.is_clear(decoded_img)
@@ -48,6 +52,8 @@ def verify_img():
     if not request.files:
         return "missing file"
 
+    # TODO: Add ability to return an array of errors
+    # pertaining to specific images if something goes wrong
     results = []
     for filekey in request.files:
         results.append(check_image(request.files[filekey]))
