@@ -33,7 +33,7 @@ def check_image(file):
     is_centered = boundingbox_checker.isCentered(decoded_img)
 
     return {
-        "fileName": file.filename,
+        "uri": file.filename,
         "isClear": is_clear,
         "isBright": is_bright,
         "hasDog": dog_data.has_dog,
@@ -48,9 +48,9 @@ def verify_img():
     if not request.files:
         return "missing file"
 
-    results = {}
+    results = []
     for filekey in request.files:
-        results[filekey] = check_image(request.files[filekey])
+        results.append(check_image(request.files[filekey]))
 
     return json.dumps(results)
         
