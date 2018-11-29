@@ -10,28 +10,10 @@ sys.path.append("./bestfriends-backend/check_boundingbox")
 sys.path.append("./bestfriends-backend")
 
 def create_app(test_config=None):
-    app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
-    )
     # create and configure the app
-    UPLOAD_FOLDER = os.getcwd() + '/bestfriends-backend/uploads'
-    
-    if not os.path.exists(UPLOAD_FOLDER):
-        try:
-            os.mkdir(UPLOAD_FOLDER)
-        except OSError as exc: # Guard against race condition
-            if exc.errno != errno.EEXIST:
-                raise
-    
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    app = Flask(__name__, instance_relative_config=True)
 
-    from . import db
-    db.init_app(app)
-
-    from . import upload, verification
-    app.register_blueprint(upload.bp)
+    from . import verification
     app.register_blueprint(verification.bp)
 
     if test_config is None:
