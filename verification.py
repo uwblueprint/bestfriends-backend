@@ -21,13 +21,7 @@ def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@bp.route('/', methods=['POST'])
-def verify_img():
-    # check if the post request has the file part
-    if not 'file' in request.files:
-        return "missing file"
-
-    file = request.files['file']
+def check_image(file):
     if not allowed_file(file.filename):
         return "invalid file type"
 
@@ -38,11 +32,26 @@ def verify_img():
     is_bright = check_img_brightness(decoded_img)
     is_centered = boundingbox_checker.isCentered(decoded_img)
 
-    return json.dumps({
-        "fileName": file.filename,
+    return {
+        "uri": file.filename,
         "isClear": is_clear,
         "isBright": is_bright,
         "hasDog": dog_data.has_dog,
         "breed": dog_data.breed,
         "isCentered": is_centered,
-    })
+    }
+
+
+@bp.route('/', methods=['POST'])
+def verify_img():
+    # check if the post request has the file part
+    if not request.files:
+        return "missing file"
+
+    results = []
+    for filekey in request.files:
+        results.append(check_image(request.files[filekey]))
+
+    return json.dumps(results)
+        
+    
