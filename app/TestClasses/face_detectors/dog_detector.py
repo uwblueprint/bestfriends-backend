@@ -8,7 +8,7 @@ from keras.applications.resnet50 import ResNet50, preprocess_input, decode_predi
 from keras.preprocessing import image
 from tqdm import tqdm
 from collections import namedtuple
-from breed_map import BREED_MAP
+from .breed_map import BREED_MAP
 
 DogInfo = namedtuple('DogInfo', ['has_dog', 'breed'])
 
